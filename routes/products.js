@@ -25,7 +25,7 @@ router.get("/all", getAllProducts);
 router.get("/:id", getProductById);
 
 // Update product by ID
-router.put("/update/:id",  updateProduct);
+router.put("/update/:id", upload.single("image"),  updateProduct);
 
 // Delete product by ID
 router.delete("/:id", deleteProduct);
