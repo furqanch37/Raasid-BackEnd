@@ -13,7 +13,7 @@ export const createProduct = async (req, res, next) => {
       ingredients,
       packaging,
       serving,
-      nutritions // this should be sent as an object in JSON format if using Postman
+      nutritions 
     } = req.body;
 
     if (!req.file) {
@@ -40,11 +40,11 @@ export const createProduct = async (req, res, next) => {
       description,
       price,
       category,
-      ingredients: JSON.parse(ingredients), // Make sure you send as JSON string if using Postman
+      ingredients: JSON.parse(ingredients), 
       packaging,
       serving,
       image: imageUrl,
-      nutritions: nutritions ? JSON.parse(nutritions) : {}, // Optional Map
+      nutritions: nutritions ? JSON.parse(nutritions) : {}, 
     });
 
     res.status(201).json({
@@ -87,7 +87,7 @@ export const getProductById = async (req, res, next) => {
 // Update Product by ID
 export const updateProduct = async (req, res, next) => {
   try {
-    console.log("Incoming body:", req.body);
+   
 
     const product = await Products.findById(req.params.id);
     if (!product) return next(new ErrorHandler("Product not found", 404));
@@ -109,7 +109,7 @@ export const updateProduct = async (req, res, next) => {
 
     // Explicitly log each field
     if (req.body.name) {
-      console.log("Updating name:", req.body.name);
+
       product.name = req.body.name;
     }
 
