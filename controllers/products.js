@@ -56,3 +56,97 @@ export const createProduct = async (req, res, next) => {
     next(error);
   }
 };
+// Get All Products
+export const getAllProducts = async (req, res, next) => {
+  try {
+    const products = await Products.find();
+    res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get Product by ID
+export const getProductById = async (req, res, next) => {
+  try {
+    const product = await Products.findById(req.params.id);
+    if (!product) return next(new ErrorHandler("Product not found", 404));
+
+    res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Update Product by ID
+export const updateProduct = async (req, res, next) => {
+  try {
+    console.log("Incoming body:", req.body);
+
+    const product = await Products.findById(req.params.id);
+    if (!product) return next(new ErrorHandler("Product not found", 404));
+
+    if (req.file) {
+      const bufferStream = streamifier.createReadStream(req.file.buffer);
+      const cloudinaryUpload = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "product_images" },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+        bufferStream.pipe(stream);
+      });
+      product.image = cloudinaryUpload.secure_url;
+    }
+
+    // Explicitly log each field
+    if (req.body.name) {
+      console.log("Updating name:", req.body.name);
+      product.name = req.body.name;
+    }
+
+    if (req.body.description) product.description = req.body.description;
+    if (req.body.price) product.price = req.body.price;
+    if (req.body.category) product.category = req.body.category;
+    if (req.body.ingredients) product.ingredients = JSON.parse(req.body.ingredients);
+    if (req.body.packaging) product.packaging = req.body.packaging;
+    if (req.body.serving) product.serving = req.body.serving;
+    if (req.body.nutritions) product.nutritions = JSON.parse(req.body.nutritions);
+
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Product updated successfully",
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// Delete Product by ID
+export const deleteProduct = async (req, res, next) => {
+  try {
+    const product = await Products.findById(req.params.id);
+    if (!product) return next(new ErrorHandler("Product not found", 404));
+
+    await product.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

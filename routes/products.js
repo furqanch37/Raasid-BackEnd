@@ -1,6 +1,10 @@
 import express from "express";
 import {
   createProduct,
+  deleteProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
 
 } from "../controllers/products.js";
 import upload from "../middlewares/upload.js";
@@ -14,16 +18,16 @@ router.post(
   createProduct
 );
 
-// // Get all products
-// router.get("/all", getAllProducts);
+// Get all products
+router.get("/all", getAllProducts);
 
-// // Get single product by ID
-// router.get("/:id", getProductById);
+// Get single product by ID
+router.get("/:id", getProductById);
 
-// // Update product by ID
-// router.put("/:id",  updateProduct);
+// Update product by ID
+router.put("/update/:id",  updateProduct);
 
-// // Delete product by ID
-// router.delete("/:id", deleteProduct);
+// Delete product by ID
+router.delete("/:id", deleteProduct);
 
 export default router;

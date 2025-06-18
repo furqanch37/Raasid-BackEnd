@@ -1,4 +1,5 @@
-// emailTemplate.js
+import dotenv from "dotenv";
+dotenv.config({ path: "./data/config.env" });
 const generateEmailTemplate = ({
   firstName = '',
   subject = 'doTask Service Marketplace',

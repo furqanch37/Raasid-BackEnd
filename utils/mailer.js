@@ -1,4 +1,6 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config({ path: "./data/config.env" });
 
 export const transporter = nodemailer.createTransport({
   service: "Gmail", // or use "smtp.mailtrap.io", "SendGrid", etc.
