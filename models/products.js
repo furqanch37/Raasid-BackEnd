@@ -1,5 +1,18 @@
 import mongoose from "mongoose";
 
+// Define sub-schema for each nutrition item
+const nutritionItemSchema = new mongoose.Schema({
+  UOM: {
+    type: String,
+    required: true
+  },
+  Results: {
+    type: String,
+    required: true
+  }
+}, { _id: false });
+
+// Main product schema
 const schema = new mongoose.Schema({
   name: {
     type: String,
@@ -35,9 +48,9 @@ const schema = new mongoose.Schema({
   },
   nutritions: {
     type: Map,
-    of: String,
+    of: nutritionItemSchema,
     required: false,
-  },
+  }
 }, {
   timestamps: true,
 });

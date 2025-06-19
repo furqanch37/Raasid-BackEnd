@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL, "http://localhost:3000", "https://raasid-x-go.vercel.app"],
+    origin: [process.env.FRONTEND_URL, "http://localhost:3001","http://localhost:3000" ,"https://raasid-x-go.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
