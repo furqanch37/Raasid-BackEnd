@@ -1,15 +1,9 @@
-import express from "express";
-import {  deleteUserById, getUserById, login, logout, register } from "../controllers/user.js";
-import { isAuthenticated, isAuthenticatedSuperAdmin } from "../middlewares/auth.js";
-import upload from "../middlewares/upload.js";
+import express from 'express';
+import { signup, login } from '../controllers/user.js';
 
 const router = express.Router();
 
-router.post('/register', upload.single('profileImage'), register);
-router.post("/login", login);
-router.get("/logout", logout);
-router.delete("/admin/delete-user/:id", isAuthenticatedSuperAdmin, deleteUserById);
-router.get("/getUserById/:userId", getUserById);
-
+router.post('/signup', signup);
+router.post('/login', login);
 
 export default router;
