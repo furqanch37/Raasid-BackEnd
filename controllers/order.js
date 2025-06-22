@@ -1,12 +1,13 @@
+
 import { Orders } from "../models/order.js";
 import ErrorHandler from "../middlewares/error.js";
+import { transporter } from "../utils/mailer.js"; // adjust the path to your mailer
 
-// Create Order
 // Create Order
 export const createOrder = async (req, res, next) => {
   try {
     const {
-      user, // <-- add this field from req.body or auth middleware
+      user,
       email,
       fullName,
       address,
@@ -26,7 +27,7 @@ export const createOrder = async (req, res, next) => {
     }
 
     const newOrder = await Orders.create({
-      user, // <-- this links the order to a user
+      user,
       email,
       fullName,
       address,
@@ -39,6 +40,41 @@ export const createOrder = async (req, res, next) => {
       status: "Pending"
     });
 
+    // Email content
+    const productSummary = products.map(
+      (p) => `• Product ID: ${p.productId}, Quantity: ${p.quantity}`
+    ).join("<br>");
+
+    const emailHtml = `
+      <h3>Thank you for your order at <strong>Raasid</strong>!</h3>
+      <p><strong>Order Summary:</strong></p>
+      <p>Name: ${fullName}</p>
+      <p>Email: ${email}</p>
+      <p>Phone: ${phone}</p>
+      <p>Address: ${address}, ${city}</p>
+      <p>Shipping Method: ${shippingMethod}</p>
+      <p>Payment Method: ${paymentMethod}</p>
+      <p>Products:</p>
+      <p>${productSummary}</p>
+      <p><strong>Total Amount:</strong> ${totalAmount} PKR</p>
+    `;
+
+    // Send email to user
+    await transporter.sendMail({
+      from: `"Raasid Store" <${process.env.ADMIN_EMAIL}>`,
+      to: email,
+      subject: "Your Raasid Order Confirmation",
+      html: emailHtml,
+    });
+
+    // Send email to admin
+    await transporter.sendMail({
+      from: `"Raasid Store" <${process.env.ADMIN_EMAIL}>`,
+      to: process.env.ADMIN_EMAIL,
+      subject: "New Order Received - Raasid",
+      html: `<h3>New order placed by ${fullName}</h3>` + emailHtml,
+    });
+
     res.status(201).json({
       success: true,
       message: "Order placed successfully",
@@ -48,6 +84,7 @@ export const createOrder = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // Get All Orders
 export const getAllOrders = async (req, res, next) => {
