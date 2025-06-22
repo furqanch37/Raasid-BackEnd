@@ -1,9 +1,7 @@
-
 import { Orders } from "../models/order.js";
 import ErrorHandler from "../middlewares/error.js";
-import { transporter } from "../utils/mailer.js"; // adjust the path to your mailer
+import { transporter } from "../utils/mailer.js";
 
-// Create Order
 export const createOrder = async (req, res, next) => {
   try {
     const {
@@ -16,16 +14,18 @@ export const createOrder = async (req, res, next) => {
       shippingMethod,
       paymentMethod,
       products,
-      totalAmount
+      totalAmount,
     } = req.body;
 
+    // Validate input
     if (
       !user || !email || !fullName || !address || !city || !phone ||
-      !shippingMethod || !paymentMethod || !products || !Array.isArray(products) || products.length === 0
+      !shippingMethod || !paymentMethod || !Array.isArray(products) || products.length === 0
     ) {
       return next(new ErrorHandler("All fields are required", 400));
     }
 
+    // Create the order
     const newOrder = await Orders.create({
       user,
       email,
@@ -37,29 +37,32 @@ export const createOrder = async (req, res, next) => {
       paymentMethod,
       products,
       totalAmount,
-      status: "Pending"
+      status: "Pending",
     });
 
-    // Email content
-    const productSummary = products.map(
-      (p) => `• Product ID: ${p.productId}, Quantity: ${p.quantity}`
-    ).join("<br>");
+    // Populate product names
+    await newOrder.populate("products.productId");
 
+    // Prepare product summary
+    const productSummary = newOrder.products
+      .map((p) => `• ${p.productId?.name || 'Unnamed Product'} — Quantity: ${p.quantity}`)
+      .join("<br>");
+
+    // Common email content
     const emailHtml = `
       <h3>Thank you for your order at <strong>Raasid</strong>!</h3>
       <p><strong>Order Summary:</strong></p>
-      <p>Name: ${fullName}</p>
-      <p>Email: ${email}</p>
-      <p>Phone: ${phone}</p>
-      <p>Address: ${address}, ${city}</p>
-      <p>Shipping Method: ${shippingMethod}</p>
-      <p>Payment Method: ${paymentMethod}</p>
-      <p>Products:</p>
-      <p>${productSummary}</p>
+      <p><strong>Name:</strong> ${fullName}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Phone:</strong> ${phone}</p>
+      <p><strong>Address:</strong> ${address}, ${city}</p>
+      <p><strong>Shipping Method:</strong> ${shippingMethod}</p>
+      <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+      <p><strong>Products:</strong><br>${productSummary}</p>
       <p><strong>Total Amount:</strong> ${totalAmount} PKR</p>
     `;
 
-    // Send email to user
+    // Send to user
     await transporter.sendMail({
       from: `"Raasid Store" <${process.env.ADMIN_EMAIL}>`,
       to: email,
@@ -67,18 +70,18 @@ export const createOrder = async (req, res, next) => {
       html: emailHtml,
     });
 
-    // Send email to admin
+    // Send to admin
     await transporter.sendMail({
       from: `"Raasid Store" <${process.env.ADMIN_EMAIL}>`,
       to: process.env.ADMIN_EMAIL,
       subject: "New Order Received - Raasid",
-      html: `<h3>New order placed by ${fullName}</h3>` + emailHtml,
+      html: `<h3>New order placed by ${fullName}</h3>${emailHtml}`,
     });
 
     res.status(201).json({
       success: true,
       message: "Order placed successfully",
-      order: newOrder
+      order: newOrder,
     });
   } catch (error) {
     next(error);
