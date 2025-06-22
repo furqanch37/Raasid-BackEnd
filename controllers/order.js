@@ -2,9 +2,11 @@ import { Orders } from "../models/order.js";
 import ErrorHandler from "../middlewares/error.js";
 
 // Create Order
+// Create Order
 export const createOrder = async (req, res, next) => {
   try {
     const {
+      user, // <-- add this field from req.body or auth middleware
       email,
       fullName,
       address,
@@ -17,13 +19,14 @@ export const createOrder = async (req, res, next) => {
     } = req.body;
 
     if (
-      !email || !fullName || !address || !city || !phone ||
+      !user || !email || !fullName || !address || !city || !phone ||
       !shippingMethod || !paymentMethod || !products || !Array.isArray(products) || products.length === 0
     ) {
       return next(new ErrorHandler("All fields are required", 400));
     }
 
     const newOrder = await Orders.create({
+      user, // <-- this links the order to a user
       email,
       fullName,
       address,
@@ -68,6 +71,22 @@ export const getOrderById = async (req, res, next) => {
     res.status(200).json({
       success: true,
       order
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// Get Orders by User ID
+export const getOrdersByUserId = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await Orders.find({ user: userId })
+      .populate("products.productId");
+
+    res.status(200).json({
+      success: true,
+      orders
     });
   } catch (error) {
     next(error);
