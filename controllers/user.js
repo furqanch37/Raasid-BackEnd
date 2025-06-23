@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key'; // Use .env 
 // Signup Controller
 export const signup = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
 
     if (!firstName || !email || !password) {
       return next(new ErrorHandler('All required fields must be provided', 400));
@@ -26,6 +26,7 @@ export const signup = async (req, res, next) => {
       lastName,
       email,
       password: hashedPassword,
+      role,
     });
 
     res.status(201).json({
@@ -36,6 +37,7 @@ export const signup = async (req, res, next) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        role: user.role,
       },
     });
   } catch (error) {
@@ -75,6 +77,7 @@ export const login = async (req, res, next) => {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
+        role: user.role,
       },
     });
   } catch (error) {
