@@ -2,11 +2,13 @@ import express from "express";
 import userRouter from "./routes/user.js";
 import productsRouter from "./routes/products.js";
 import categoryRouter from "./routes/category.js";
+import InquiryRouter from "./routes/inquiry.js";
 import orderRouter from "./routes/order.js";
 import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
 import cors from "cors";
+
 
 export const app = express();
 
@@ -30,6 +32,7 @@ app.use("/api/users", userRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/inquiry", InquiryRouter);
 app.get("/", (req, res) => {
   res.send("Nice working backend by Muhammad Furqan Wajih");
 });
