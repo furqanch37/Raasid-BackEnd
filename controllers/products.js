@@ -94,10 +94,19 @@ export const createProduct = async (req, res, next) => {
   }
 };
 
-// Get All Products
+// Get All Products with optional category filter
 export const getAllProducts = async (req, res, next) => {
   try {
-    const products = await Products.find();
+    const { category } = req.query;
+
+    // Build dynamic filter
+    const filter = {};
+    if (category) {
+      filter.category = { $regex: new RegExp(`^${category}$`, 'i') }; // Case-insensitive match
+    }
+
+    const products = await Products.find(filter);
+
     res.status(200).json({
       success: true,
       products,
@@ -106,6 +115,7 @@ export const getAllProducts = async (req, res, next) => {
     next(error);
   }
 };
+
 
 // Get Product by ID
 export const getProductById = async (req, res, next) => {
