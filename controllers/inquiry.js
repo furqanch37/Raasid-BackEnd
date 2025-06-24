@@ -72,3 +72,31 @@ export const getAllInquiries = async (req, res) => {
     res.status(500).json({ success: false, message: "Unable to fetch inquiries." });
   }
 };
+export const replyToInquiry = async (req, res) => {
+  const { email, name, replyMessage } = req.body;
+
+  if (!email || !replyMessage) {
+    return res.status(400).json({ success: false, message: "Email and reply message are required." });
+  }
+
+  try {
+    const mailOptions = {
+      from: "muhammadfurqanch517@gmail.com",
+      to: email,
+      subject: `Reply from Raasid Team`,
+      html: `
+        <center><img src="https://res.cloudinary.com/daflot6fo/image/upload/v1750746433/020a63d10fa8da53dcf5754403c84115fdada494_w0oddy.png" alt="Raasid Logo" style="width: 70px;"></center>
+        <h2 style="font-family: Arial, sans-serif;">Hi ${name || 'there'},</h2>
+        <p>${replyMessage}</p>
+        <p style="margin-top: 30px;">Best regards,<br><strong>Raasid Team</strong><br><a href="mailto:muhammadfurqanch517@gmail.com">muhammadfurqanch517@gmail.com</a></p>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: "Reply sent successfully." });
+
+  } catch (error) {
+    console.error("Error sending reply:", error);
+    res.status(500).json({ success: false, message: "Failed to send reply." });
+  }
+};
