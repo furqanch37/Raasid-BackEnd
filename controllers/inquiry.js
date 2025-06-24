@@ -25,7 +25,7 @@ export const submitInquiry = async (req, res) => {
       to: "muhammadfurqanch517@gmail.com",
       subject: `New Inquiry from ${name}: ${subject}`,
       html: `
-        <center><img src="https://res.cloudinary.com/dzcecmml3/image/upload/v1749712071/logo_hqwxdf.png" alt="Raasid Logo" style="width: 70px; height:70px; border-radius:50%; padding:5px;"></center>
+        <center><img src="https://res.cloudinary.com/dzcecmml3/image/upload/v1750745772/RaasidLogo_eps4j3.svg" alt="Raasid Logo" style="width: 70px;"></center>
         <center><h2 style="color: #3A3A3A; font-family: Arial, sans-serif; font-size: 24px; font-weight: bold; margin-bottom: 20px;">New Contact Form Submission</h2></center>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
@@ -43,7 +43,7 @@ export const submitInquiry = async (req, res) => {
       to: email,
       subject: "Thank You for Contacting Raasid",
       html: `
-        <center><img src="https://res.cloudinary.com/dzcecmml3/image/upload/v1750745772/RaasidLogo_eps4j3.svg" alt="Raasid Logo" style="width: 70px; height:70px; border-radius:50%; padding:5px;"></center>
+        <center><img src="https://res.cloudinary.com/daflot6fo/image/upload/v1750746433/020a63d10fa8da53dcf5754403c84115fdada494_w0oddy.png" alt="Raasid Logo" style="width: 70px;"></center>
         <h2 style="font-family: Arial, sans-serif;">Hi ${name},</h2>
         <p>Thank you for reaching out to <strong>Raasid</strong>. We've received your message and our team will get back to you shortly.</p>
         <p><strong>Your message:</strong></p>
