@@ -43,12 +43,12 @@ export const submitInquiry = async (req, res) => {
       to: email,
       subject: "Thank You for Contacting Raasid",
       html: `
-        <center><img src="https://res.cloudinary.com/dzcecmml3/image/upload/v1749712071/logo_hqwxdf.png" alt="Raasid Logo" style="width: 70px; height:70px; border-radius:50%; padding:5px;"></center>
+        <center><img src="https://res.cloudinary.com/dzcecmml3/image/upload/v1750745772/RaasidLogo_eps4j3.svg" alt="Raasid Logo" style="width: 70px; height:70px; border-radius:50%; padding:5px;"></center>
         <h2 style="font-family: Arial, sans-serif;">Hi ${name},</h2>
         <p>Thank you for reaching out to <strong>Raasid</strong>. We've received your message and our team will get back to you shortly.</p>
         <p><strong>Your message:</strong></p>
         <p>"${message}"</p>
-        <p>If you need immediate assistance, call us at <strong>+(407) 686 3865</strong>.</p>
+        <p>If you need immediate assistance, call us at <strong>+92 370 2333125</strong>.</p>
         <p>Best regards,<br><strong>Raasid Team</strong><br><a href="mailto:muhammadfurqanch517@gmail.com">muhammadfurqanch517@gmail.com</a></p>
       `,
     };
