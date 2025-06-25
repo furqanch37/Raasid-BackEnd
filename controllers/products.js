@@ -135,6 +135,7 @@ export const getProductById = async (req, res, next) => {
 // Update Product by ID
 export const updateProduct = async (req, res, next) => {
   try {
+    console.log(req.body.nutritions);
     const product = await Products.findById(req.params.id);
     if (!product) return next(new ErrorHandler("Product not found", 404));
 
@@ -199,6 +200,69 @@ export const deleteProduct = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Product deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// Insert Multiple Products
+export const insertManyProducts = async (req, res, next) => {
+  try {
+    const productsData = req.body;
+
+    if (!Array.isArray(productsData) || productsData.length === 0) {
+      return next(new ErrorHandler("Products array is required", 400));
+    }
+
+    const validatedProducts = [];
+
+    for (const product of productsData) {
+      const {
+        name,
+        description,
+        price,
+        category,
+        ingredients,
+        packaging,
+        serving,
+       
+        image
+      } = product;
+
+    
+
+      let parsedIngredients = [];
+    
+
+      try {
+        parsedIngredients = Array.isArray(ingredients)
+          ? ingredients
+          : JSON.parse(ingredients || "[]");
+      } catch (err) {
+        return next(new ErrorHandler("Invalid ingredients format", 400));
+      }
+
+    
+      validatedProducts.push({
+        name,
+        description,
+        price,
+        category,
+        ingredients: parsedIngredients,
+        packaging,
+        serving,
+      
+        image
+      });
+    }
+
+    const inserted = await Products.insertMany(validatedProducts);
+
+    res.status(201).json({
+      success: true,
+      message: "Products inserted successfully",
+      insertedCount: inserted.length,
+      products: inserted
     });
   } catch (error) {
     next(error);

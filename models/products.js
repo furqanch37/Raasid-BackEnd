@@ -16,35 +16,35 @@ const nutritionItemSchema = new mongoose.Schema({
 const schema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   price: {
     type: Number,
-    required: true,
+    required: false,
   },
   category: {
     type: String,
-    required: true,
+    required: false,
   },
   ingredients: {
     type: [String], 
-    required: true,
+    required: false,
   },
   image: {
     type: String,
-    required: true,
+    required: false,
   },
   packaging: {
     type: String,
-    required: true,
+    required: false,
   },
   serving: {
     type: String,
-    required: true,
+    required: false,
   },
   nutritions: {
     type: Map,

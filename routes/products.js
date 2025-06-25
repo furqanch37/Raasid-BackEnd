@@ -5,6 +5,7 @@ import {
   getAllProducts,
   getProductById,
   updateProduct,
+  insertManyProducts,
 
 } from "../controllers/products.js";
 import upload from "../middlewares/upload.js";
@@ -24,6 +25,8 @@ router.get("/all", getAllProducts);
 // Get single product by ID
 router.get("/:id", getProductById);
 
+
+router.post("/bulk-insert", insertManyProducts);
 // Update product by ID
 router.put("/update/:id", upload.single("image"),  updateProduct);
 
