@@ -97,12 +97,16 @@ export const createProduct = async (req, res, next) => {
 // Get All Products with optional category filter
 export const getAllProducts = async (req, res, next) => {
   try {
-    const { category } = req.query;
+    const { category, search } = req.query;
 
-    // Build dynamic filter
     const filter = {};
+
     if (category) {
-      filter.category = { $regex: new RegExp(`^${category}$`, 'i') }; // Case-insensitive match
+      filter.category = { $regex: new RegExp(`^${category}$`, 'i') }; // case-insensitive match
+    }
+
+    if (search) {
+      filter.name = { $regex: new RegExp(search, 'i') }; // case-insensitive partial search
     }
 
     const products = await Products.find(filter);
@@ -115,6 +119,7 @@ export const getAllProducts = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 // Get Product by ID
