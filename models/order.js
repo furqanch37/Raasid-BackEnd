@@ -23,9 +23,13 @@ const orderSchema = new mongoose.Schema({
   address: { type: String, required: true },
   city: { type: String, required: true },
   phone: { type: String, required: true },
+  ppTransactionId: {
+  type: Number,
+  required: false,
+},
   shippingMethod: {
     type: String,
-    enum: ["TCS", "PostOffice", "Leopards", "M&P"],
+    enum: ["TCS", "Pakistan Post", "Leopards", "M&P"],
     required: true,
   },
   paymentMethod: {

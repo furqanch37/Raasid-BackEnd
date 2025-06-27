@@ -94,33 +94,6 @@ export const createProduct = async (req, res, next) => {
   }
 };
 
-// Get All Products with optional category filter
-export const getAllProducts = async (req, res, next) => {
-  try {
-    const { category, search } = req.query;
-
-    const filter = {};
-
-    if (category) {
-      filter.category = { $regex: new RegExp(`^${category}$`, 'i') }; // case-insensitive match
-    }
-
-    if (search) {
-      filter.name = { $regex: new RegExp(search, 'i') }; // case-insensitive partial search
-    }
-
-    const products = await Products.find(filter);
-
-    res.status(200).json({
-      success: true,
-      products,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-
 
 // Get Product by ID
 export const getProductById = async (req, res, next) => {
@@ -140,7 +113,7 @@ export const getProductById = async (req, res, next) => {
 // Update Product by ID
 export const updateProduct = async (req, res, next) => {
   try {
-    console.log(req.body.nutritions);
+    console.log(req.body);
     const product = await Products.findById(req.params.id);
     if (!product) return next(new ErrorHandler("Product not found", 404));
 
@@ -210,64 +183,28 @@ export const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
-// Insert Multiple Products
-export const insertManyProducts = async (req, res, next) => {
+
+
+
+export const getAllProducts = async (req, res, next) => {
   try {
-    const productsData = req.body;
+    const { category, search } = req.query;
 
-    if (!Array.isArray(productsData) || productsData.length === 0) {
-      return next(new ErrorHandler("Products array is required", 400));
+    const filter = {};
+
+    if (category) {
+      filter.category = { $regex: new RegExp(`^${category}$`, 'i') }; 
     }
 
-    const validatedProducts = [];
-
-    for (const product of productsData) {
-      const {
-        name,
-        description,
-        price,
-        category,
-        ingredients,
-        packaging,
-        serving,
-       
-        image
-      } = product;
-
-    
-
-      let parsedIngredients = [];
-    
-
-      try {
-        parsedIngredients = Array.isArray(ingredients)
-          ? ingredients
-          : JSON.parse(ingredients || "[]");
-      } catch (err) {
-        return next(new ErrorHandler("Invalid ingredients format", 400));
-      }
-
-    
-      validatedProducts.push({
-        name,
-        description,
-        price,
-        category,
-        ingredients: parsedIngredients,
-        packaging,
-        serving,
-      
-        image
-      });
+    if (search) {
+      filter.name = { $regex: new RegExp(search, 'i') }; // case-insensitive partial search
     }
 
-    const inserted = await Products.insertMany(validatedProducts);
+    const products = await Products.find(filter);
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
-      message: "Products inserted successfully",
-      insertedCount: inserted.length,
-      products: inserted
+      products,
     });
   } catch (error) {
     next(error);
