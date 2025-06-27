@@ -1,8 +1,8 @@
-import XLSX from 'xlsx';
+// import XLSX from 'xlsx';
 import City from '../models/City.js';
 
 // Upload Excel file and store city data in MongoDB
-export const uploadCitiesFromExcel = async (req, res) => {
+ /*export const uploadCitiesFromExcel = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
@@ -30,7 +30,7 @@ export const uploadCitiesFromExcel = async (req, res) => {
     res.status(500).json({ message: 'Failed to upload cities', error: err.message });
   }
 };
-
+*/
 
 // Determine zone based on origin (Nowshera) and destination
 export const resolveZone = async (req, res) => {
